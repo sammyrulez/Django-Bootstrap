@@ -72,7 +72,7 @@ sed -i "s/STATIC_ROOT = '[^']*'/STATIC_ROOT = os.path.join(SITE_ROOT, 'files', '
 sed -i "s/STATIC_URL = '[^']*'/STATIC_URL = '\/static\/'/" $project_name/settings.py
 sed -i "s/ADMIN_MEDIA_PREFIX = '[^']*'/ADMIN_MEDIA_PREFIX = '\/static\/admin\/'/" $project_name/settings.py
 # installed apps
-sed -i "s/    # 'django.contrib.admindocs',/    # 'django.contrib.admindocs',\n    'south', \n 'django-coverage' /" $project_name/settings.py
+sed -i "s/    # 'django.contrib.admindocs',/    # 'django.contrib.admindocs',\n    'south', \n 'django_coverage' /" $project_name/settings.py
 sed -i "s/    # 'django.contrib.admin',/     'django.contrib.admin', /" $project_name/settings.py
 
 
@@ -117,6 +117,6 @@ git add -A
 git commit -m "Bootstrapped project - initial commit"
 
 
-heroku create $heroku_name --stack cedar
+#heroku create $heroku_name --stack cedar
 #todo rename origin to heroku
 #todo add git repo
