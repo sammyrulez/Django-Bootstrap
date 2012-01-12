@@ -15,7 +15,7 @@
 # Use this project for anything you like, fork it, modify it etc.
 
 function help {
-    echo "Usage: `basename $0` <project_name> <dirname>"
+    echo "Usage: `basename $0` <project_name> [github_name] [heroku_name]"
 }
 
 # check args and provide help if incorrect
