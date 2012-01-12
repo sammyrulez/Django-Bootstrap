@@ -12,24 +12,14 @@ heroku_name=$2
 project_name_prj=$1'_prj'
 
 # check if the dir already exists
-if [ -d project_name_prj ]; then
-    echo "That directory ("$2") already exists"
+if [ -d $project_name_prj ]; then
+    echo "That directory ("$project_name_prj") already exists"
     exit
 fi
 
 
 mkdir  $project_name_prj
 cd  $project_name_prj
-django-admin.py startproject  $project_name
-
-# create file dirs
-mkdir -p $project_name/static
-mkdir -p $project_name/restricted
-mkdir -p $project_name/template
-
-git init
-git add .gitignore
-git commit -m "Initial commit"
 
 
 echo "Django==1.3.1" > requirements.txt
@@ -42,6 +32,20 @@ echo coverage >> requirements_dev.txt
 echo django-jenkins >> requirements_dev.txt
 echo django-coverage >> requirements_dev.txt
 
+
+virtualenv 'py_'$project_name --no-site-packages
+source 'py_'$project_name/bin/activate
+
+pip install -r requirements_dev.txt
+
+django-admin.py startproject  $project_name
+
+# create file dirs
+mkdir -p $project_name/static
+mkdir -p $project_name/restricted
+mkdir -p $project_name/template
+
+
 echo "web: $project_name/run_heroku_run.sh" > Procfile
 echo "#!/bin/bash
 . bin/activate
@@ -49,13 +53,9 @@ pip -E . install --upgrade gunicorn
 cd $project_name
 ../bin/gunicorn_django -b 0.0.0.0:$PORT -w 1" > $project_name/run_heroku_run.sh
 chmod +x $project_name/run_heroku_run.sh
+git init
 
-
-virtualenv $project_name'_py_env'
-source $project_name'_py_env'/bin/activate
-
-pip install -r requirements_dev.txt
-
+git commit -m "Initial commit"
 # edit the settings file
 # imports
 sed -i "s/DEBUG = True/import os\nimport sys\n\nPROJECT_DIR = <project dir>\nPROJECT_ROOT = os.path.dirname(PROJECT_DIR)\n\nDEBUG = True/" $project_name/settings.py
@@ -73,11 +73,18 @@ sed -i "s/STATIC_URL = '[^']*'/STATIC_URL = '\/static\/'/" $project_name/setting
 sed -i "s/ADMIN_MEDIA_PREFIX = '[^']*'/ADMIN_MEDIA_PREFIX = '\/static\/admin\/'/" $project_name/settings.py
 # installed apps
 sed -i "s/    # 'django.contrib.admindocs',/    # 'django.contrib.admindocs',\n    'south', \n 'django-coverage' /" $project_name/settings.py
-sed -i "s/    # 'django.contrib.admin',/     'django.contrib.admin'" $project_name/settings.py
+sed -i "s/    # 'django.contrib.admin',/     'django.contrib.admin', /" $project_name/settings.py
 
 
 # templates
-sed -i "s/TEMPLATE_DIRS = (/TEMPLATE_DIRS = (\n    os.path.join(PROJECT_DIR, 'templates'),/" $project_dir/settings.py
+sed -i "s/TEMPLATE_DIRS = (/TEMPLATE_DIRS = (\n    os.path.join(PROJECT_DIR, 'templates'),/" $project_name/settings.py
+
+#Admin urls
+sed -i "s/# from django.contrib import admin/from django.contrib import admin / "$project_name/urls.py
+sed -i "s/# admin.autodiscover()/admin.autodiscover()/ " $project_name/urls.py
+sed -i "s/    # url(r'\^admin/', include(admin.site.urls)),/    url(r'\^admin\/', include(admin.site.urls)),/ " $project_name/urls.py
+
+
 
 
 
@@ -88,7 +95,7 @@ echo *.egg >> .gitignore
 echo *.EGG >> .gitignore
 echo *.EGG-INFO >> .gitignore
 echo bin >> .gitignore
-echo $project_name'_py_env' >> .gitignore
+echo 'py_'$project_name >> .gitignore
 echo build >> .gitignore
 echo develop-eggs >> .gitignore
 echo downloads >> .gitignore
@@ -110,4 +117,4 @@ git add -A
 git commit -m "Bootstrapped project - initial commit"
 
 #TODO verify if project exists
-heroku create $heroku_name --stack cedar
+# heroku create $heroku_name --stack cedar
