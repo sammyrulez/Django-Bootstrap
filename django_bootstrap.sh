@@ -80,9 +80,9 @@ sed -i "s/    # 'django.contrib.admin',/     'django.contrib.admin', /" $project
 sed -i "s/TEMPLATE_DIRS = (/TEMPLATE_DIRS = (\n    os.path.join(PROJECT_DIR, 'templates'),/" $project_name/settings.py
 
 #Admin urls
-sed -i "s/# from django.contrib import admin/from django.contrib import admin / "$project_name/urls.py
+sed -i "s/# from django.contrib import admin/from django.contrib import admin / " $project_name/urls.py
 sed -i "s/# admin.autodiscover()/admin.autodiscover()/ " $project_name/urls.py
-sed -i "s/    # url(r'\^admin/', include(admin.site.urls)),/    url(r'\^admin\/', include(admin.site.urls)),/ " $project_name/urls.py
+sed -i "s/    # url(r'\^admin\/', include(admin.site.urls)),/    url(r'\^admin\/', include(admin.site.urls)),/ " $project_name/urls.py
 
 
 
@@ -116,5 +116,7 @@ echo *.db >> .gitignore
 git add -A
 git commit -m "Bootstrapped project - initial commit"
 
-#TODO verify if project exists
-# heroku create $heroku_name --stack cedar
+
+heroku create $heroku_name --stack cedar
+#todo rename origin to heroku
+#todo add git repo
