@@ -58,17 +58,17 @@ git init
 git commit -m "Initial commit"
 # edit the settings file
 # imports
-sed -i "s/DEBUG = True/import os\nimport sys\n\nPROJECT_DIR = <project dir>\nPROJECT_ROOT = os.path.dirname(PROJECT_DIR)\n\nDEBUG = True/" $project_name/settings.py
+sed -i "s/DEBUG = True/import os\nimport sys\n\nSITE_ROOT = os.path.dirname(os.path.realpath(__file__))\n\nDEBUG = True/" $project_name/settings.py
 # db
 sed -i "s/'ENGINE': 'django.db.backends.',.*$/'ENGINE': 'django.db.backends.sqlite3',/" $project_name/settings.py
-sed -i "s/'NAME': '',.*$/'NAME': os.path.join(PROJECT_ROOT, 'development.db'),/" $project_name/settings.py
+sed -i "s/'NAME': '',.*$/'NAME': os.path.join(SITE_ROOT, 'development.db'),/" $project_name/settings.py
 # location
 sed -i "s/TIME_ZONE = '[^']*'/TIME_ZONE = 'Europe\/Rome'/" $project_name/settings.py
 sed -i "s/LANGUAGE_CODE = '[^']*'/LANGUAGE_CODE = 'it-it'/" $project_name/settings.py
 # files
-sed -i "s/MEDIA_ROOT = '[^']*'/MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'files', 'restricted')/" $project_name/settings.py
+sed -i "s/MEDIA_ROOT = '[^']*'/MEDIA_ROOT = os.path.join(SITE_ROOT, 'files', 'restricted')/" $project_name/settings.py
 sed -i "s/MEDIA_URL = '[^']*'/MEDIA_URL = '\/media\/'/" $project_name/settings.py
-sed -i "s/STATIC_ROOT = '[^']*'/STATIC_ROOT = os.path.join(PROJECT_ROOT, 'files', 'static')/" $project_name/settings.py
+sed -i "s/STATIC_ROOT = '[^']*'/STATIC_ROOT = os.path.join(SITE_ROOT, 'files', 'static')/" $project_name/settings.py
 sed -i "s/STATIC_URL = '[^']*'/STATIC_URL = '\/static\/'/" $project_name/settings.py
 sed -i "s/ADMIN_MEDIA_PREFIX = '[^']*'/ADMIN_MEDIA_PREFIX = '\/static\/admin\/'/" $project_name/settings.py
 # installed apps
@@ -77,7 +77,7 @@ sed -i "s/    # 'django.contrib.admin',/     'django.contrib.admin', /" $project
 
 
 # templates
-sed -i "s/TEMPLATE_DIRS = (/TEMPLATE_DIRS = (\n    os.path.join(PROJECT_DIR, 'templates'),/" $project_name/settings.py
+sed -i "s/TEMPLATE_DIRS = (/TEMPLATE_DIRS = (\n    os.path.join(SITE_ROOT, 'templates'),/" $project_name/settings.py
 
 #Admin urls
 sed -i "s/# from django.contrib import admin/from django.contrib import admin / " $project_name/urls.py
